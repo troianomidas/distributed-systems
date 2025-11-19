@@ -289,9 +289,9 @@
     public class BarSimulation {
         public static void main(String[] args) {
             // Valores padrão
-            int numClients = 9;
+            int numClients = 10;
             int numWaiters = 3;
-            int capacity = 3;
+            int capacity = 4;
             int numRounds = 1;
 
             if (args.length >= 4) {
