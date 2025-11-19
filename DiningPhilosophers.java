@@ -46,7 +46,7 @@ class Filosofo extends Thread {
         
         estado = COM_FOME;
         System.out.println("😋 Filósofo " + id + " está com fome!");
-        Thread.sleep(100); // Delay para visualização
+        Thread.sleep(100); // somente vizualização
     }
 
     private void tentarComer() throws InterruptedException {
@@ -108,7 +108,7 @@ class Filosofo extends Thread {
 
 public class DiningPhilosophers {
     private static final int NUM_FILOSOFOS = 5;
-    private static final int TEMPO_SIMULACAO = 60000; // 60 segundos
+    private static final int TEMPO_SIMULACAO = 10; // 60 segundos
 
     public static void main(String[] args) {
         int tempoSimulacao = TEMPO_SIMULACAO;
