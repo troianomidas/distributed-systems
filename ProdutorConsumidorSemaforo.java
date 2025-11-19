@@ -15,31 +15,31 @@ class BufferSemaforo {
         this.capacidade = capacidade;
         this.buffer = new LinkedList<>();
 
-        this.semVazios = new Semaphore(capacidade);  // Inicialmente, todos vazios
-        this.semCheios = new Semaphore(0);           // Inicialmente, nenhum cheio
+        this.semVazios = new Semaphore(capacidade);
+        this.semCheios = new Semaphore(0);
         this.mutex = new Semaphore(1);
     }
 
     public void produzir(int item) throws InterruptedException {
-        semVazios.acquire();   //decrementa
+        semVazios.acquire();
         mutex.acquire();
 
         buffer.add(item);
         System.out.println("✅ PRODUZIDO: " + item + " | Buffer: " + buffer.size() + "/" + capacidade);
 
         mutex.release();
-        semCheios.release();   // incrementa
+        semCheios.release();
     }
 
     public int consumir() throws InterruptedException {
-        semCheios.acquire();   // decrementa
+        semCheios.acquire();
         mutex.acquire();
 
         int item = buffer.poll();
         System.out.println("🔽 CONSUMIDO: " + item + " | Buffer: " + buffer.size() + "/" + capacidade);
 
         mutex.release();
-        semVazios.release();   // incrementa
+        semVazios.release();
 
         return item;
     }

@@ -66,7 +66,6 @@ class Barbearia {
             return -1;
         }
 
-        // Remove o primeiro cliente da fila
         clienteAtual = salaEspera.poll();
         barbeiroOcupado = true;
         corteFinalizado = false;

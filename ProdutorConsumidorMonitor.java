@@ -29,7 +29,6 @@ class BufferMonitor {
             wait();
         }
 
-        // Remove item do buffer
         int item = buffer.poll();
         System.out.println("🔽 CONSUMIDO: " + item + " | Buffer: " + buffer.size() + "/" + capacidade);
 
@@ -133,7 +132,6 @@ public class ProdutorConsumidorMonitor {
         }
 
         try {
-            // Aguarda todos terminarem
             for (ProdutorMonitor p : produtores) {
                 p.join();
             }
