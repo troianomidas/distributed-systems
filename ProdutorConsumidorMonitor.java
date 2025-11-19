@@ -12,22 +12,18 @@ class BufferMonitor {
     }
 
     public synchronized void produzir(int item) throws InterruptedException {
-        // Aguarda enquanto buffer está cheio
         while (buffer.size() >= capacidade) {
             System.out.println("⚠️  Buffer CHEIO! Produtor aguardando...");
             wait();
         }
 
-        // Adiciona item ao buffer
         buffer.add(item);
         System.out.println("✅ PRODUZIDO: " + item + " | Buffer: " + buffer.size() + "/" + capacidade);
 
-        // Notifica consumidores que há item disponível
         notifyAll();
     }
 
     public synchronized int consumir() throws InterruptedException {
-        // Aguarda enquanto buffer está vazio
         while (buffer.isEmpty()) {
             System.out.println("⚠️  Buffer VAZIO! Consumidor aguardando...");
             wait();
@@ -37,7 +33,6 @@ class BufferMonitor {
         int item = buffer.poll();
         System.out.println("🔽 CONSUMIDO: " + item + " | Buffer: " + buffer.size() + "/" + capacidade);
 
-        // Notifica produtores que há espaço disponível
         notifyAll();
 
         return item;
@@ -61,15 +56,12 @@ class ProdutorMonitor extends Thread {
     public void run() {
         try {
             for (int i = 1; i <= numItens; i++) {
-                // Produz um item (número aleatório)
-                int item = random.nextInt(100) + 1;
+                int item = random.nextInt(100);
 
                 System.out.println("🏭 Produtor " + produtorId + " produziu item " + item);
 
-                // Adiciona ao buffer
                 buffer.produzir(item);
 
-                // Simula tempo de produção
                 Thread.sleep(random.nextInt(1000) + 500);
             }
             System.out.println("🏁 Produtor " + produtorId + " finalizou.\n");
@@ -96,12 +88,10 @@ class ConsumidorMonitor extends Thread {
     public void run() {
         try {
             for (int i = 1; i <= numItens; i++) {
-                // Consome item do buffer
                 int item = buffer.consumir();
 
                 System.out.println("🍽️  Consumidor " + consumidorId + " consumiu item " + item);
 
-                // Simula tempo de consumo
                 Thread.sleep(random.nextInt(1000) + 500);
             }
             System.out.println("🏁 Consumidor " + consumidorId + " finalizou.\n");
@@ -130,14 +120,12 @@ public class ProdutorConsumidorMonitor {
 
         BufferMonitor buffer = new BufferMonitor(capacidadeBuffer);
 
-        // Cria produtores
         ProdutorMonitor[] produtores = new ProdutorMonitor[numProdutores];
         for (int i = 0; i < numProdutores; i++) {
             produtores[i] = new ProdutorMonitor(i + 1, buffer, itensPorProdutor);
             produtores[i].start();
         }
 
-        // Cria consumidores
         ConsumidorMonitor[] consumidores = new ConsumidorMonitor[numConsumidores];
         for (int i = 0; i < numConsumidores; i++) {
             consumidores[i] = new ConsumidorMonitor(i + 1, buffer, itensPorConsumidor);

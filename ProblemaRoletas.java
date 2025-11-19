@@ -14,12 +14,10 @@ class Casino {
     }
 
     public synchronized int adquirirRoleta(int jogadorId) throws InterruptedException {
-        // Se não há roleta livre, imprime UMA vez e aguarda
         if (!temRoletaLivre()) {
             System.out.println("🕐 Jogador " + jogadorId + " está ESPERANDO por uma roleta livre...");
         }
 
-        // Aguarda até haver uma roleta livre
         while (!temRoletaLivre()) {
             wait();
         }
@@ -72,7 +70,6 @@ class JogadorThread extends Thread {
     public void run() {
         try {
             for (int tentativa = 1; tentativa <= numJogadas; tentativa++) {
-                // Adquire uma roleta
                 int roletaIndex = casino.adquirirRoleta(jogadorId);
 
                 System.out.println("🎲 Jogador " + jogadorId + " está JOGANDO na Roleta " + roletaIndex + " (jogada " + tentativa + "/" + numJogadas + ")");
@@ -111,7 +108,6 @@ public class ProblemaRoletas {
 
             Casino casino = new Casino(numRoletas);
 
-            // Cria e inicia as threads dos jogadores
             JogadorThread[] jogadores = new JogadorThread[numJogadores];
             for (int i = 0; i < numJogadores; i++) {
                 jogadores[i] = new JogadorThread(i + 1, casino, numJogadas);

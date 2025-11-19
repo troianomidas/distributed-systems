@@ -7,10 +7,9 @@ class BufferSemaforo {
     private Queue<Integer> buffer;
     private int capacidade;
 
-    // Semáforos
-    private Semaphore semVazios;   // Quantos espaços vazios
-    private Semaphore semCheios;   // Quantos itens prontos
-    private Semaphore mutex;       // Exclusão mútua
+    private Semaphore semVazios;
+    private Semaphore semCheios;
+    private Semaphore mutex;    // Exclusão mútua
 
     public BufferSemaforo(int capacidade) {
         this.capacidade = capacidade;
@@ -18,31 +17,29 @@ class BufferSemaforo {
 
         this.semVazios = new Semaphore(capacidade);  // Inicialmente, todos vazios
         this.semCheios = new Semaphore(0);           // Inicialmente, nenhum cheio
-        this.mutex = new Semaphore(1);               // Mutex binário
+        this.mutex = new Semaphore(1);
     }
 
     public void produzir(int item) throws InterruptedException {
-        semVazios.acquire();   // Aguarda espaço vazio (decrementa)
-        mutex.acquire();       // Entra na seção crítica
+        semVazios.acquire();   //decrementa
+        mutex.acquire();
 
-        // Adiciona item ao buffer
         buffer.add(item);
         System.out.println("✅ PRODUZIDO: " + item + " | Buffer: " + buffer.size() + "/" + capacidade);
 
-        mutex.release();       // Sai da seção crítica
-        semCheios.release();   // Incrementa contador de itens cheios
+        mutex.release();
+        semCheios.release();   // incrementa
     }
 
     public int consumir() throws InterruptedException {
-        semCheios.acquire();   // Aguarda item disponível (decrementa)
-        mutex.acquire();       // Entra na seção crítica
+        semCheios.acquire();   // decrementa
+        mutex.acquire();
 
-        // Remove item do buffer
         int item = buffer.poll();
         System.out.println("🔽 CONSUMIDO: " + item + " | Buffer: " + buffer.size() + "/" + capacidade);
 
-        mutex.release();       // Sai da seção crítica
-        semVazios.release();   // Incrementa contador de espaços vazios
+        mutex.release();
+        semVazios.release();   // incrementa
 
         return item;
     }
@@ -65,15 +62,12 @@ class ProdutorSemaforo extends Thread {
     public void run() {
         try {
             for (int i = 1; i <= numItens; i++) {
-                // Produz um item (número aleatório)
-                int item = random.nextInt(100) + 1;
+                int item = random.nextInt(100);
 
                 System.out.println("🏭 Produtor " + produtorId + " produziu item " + item);
 
-                // Adiciona ao buffer
                 buffer.produzir(item);
 
-                // Simula tempo de produção
                 Thread.sleep(random.nextInt(1000) + 500);
             }
             System.out.println("🏁 Produtor " + produtorId + " finalizou.\n");
@@ -101,12 +95,10 @@ class ConsumidorSemaforo extends Thread {
     public void run() {
         try {
             for (int i = 1; i <= numItens; i++) {
-                // Consome item do buffer
                 int item = buffer.consumir();
 
                 System.out.println("🍽️  Consumidor " + consumidorId + " consumiu item " + item);
 
-                // Simula tempo de consumo
                 Thread.sleep(random.nextInt(1000) + 500);
             }
             System.out.println("🏁 Consumidor " + consumidorId + " finalizou.\n");
@@ -135,14 +127,12 @@ public class ProdutorConsumidorSemaforo {
 
         BufferSemaforo buffer = new BufferSemaforo(capacidadeBuffer);
 
-        // Cria produtores
         ProdutorSemaforo[] produtores = new ProdutorSemaforo[numProdutores];
         for (int i = 0; i < numProdutores; i++) {
             produtores[i] = new ProdutorSemaforo(i + 1, buffer, itensPorProdutor);
             produtores[i].start();
         }
 
-        // Cria consumidores
         ConsumidorSemaforo[] consumidores = new ConsumidorSemaforo[numConsumidores];
         for (int i = 0; i < numConsumidores; i++) {
             consumidores[i] = new ConsumidorSemaforo(i + 1, buffer, itensPorConsumidor);
@@ -150,7 +140,6 @@ public class ProdutorConsumidorSemaforo {
         }
 
         try {
-            // Aguarda todos terminarem
             for (ProdutorSemaforo p : produtores) {
                 p.join();
             }
