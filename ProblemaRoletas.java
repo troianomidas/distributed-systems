@@ -32,7 +32,7 @@ class Casino {
 
     public synchronized void liberarRoleta(int roletaIndex, int jogadorId) {
         roletas[roletaIndex] = true;
-        System.out.println("✅ Jogador " + jogadorId + " LIBEROU a Roleta " + roletaIndex);
+        System.out.println("✅ Jogador " + jogadorId + " LIBEROU a Roleta e perdeu dinheiro pro tigrin " + roletaIndex);
 
         notifyAll();
     }

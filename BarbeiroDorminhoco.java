@@ -21,7 +21,7 @@ class Barbearia {
 
     public synchronized boolean clienteChega(int clienteId) {
         if (salaEspera.size() >= numCadeiras) {
-            System.out.println("👋 Cliente " + clienteId + " chegou, mas a barbearia está LOTADA. Saiu imediatamente.");
+            System.out.println("👋 Cliente " + clienteId + " chegou, mas a barbearia está LOTADA. Não quis esperar e saiu imediatamente.");
             return false;
         }
 
@@ -48,12 +48,12 @@ class Barbearia {
         while (!corteFinalizado) {
             wait();
         }
-        System.out.println("✂️ Cliente " + clienteId + " teve o corte FINALIZADO. Saindo da barbearia.\n");
+        System.out.println("✂️ Cliente " + clienteId + " teve o corte FINALIZADO na régua. Saindo da barbearia.\n");
     }
 
     public synchronized void barbeiroAguardaCliente() throws InterruptedException {
         while (salaEspera.isEmpty()) {
-            System.out.println("😴 Barbeiro está DORMINDO (sem clientes)...");
+            System.out.println("😴 Barbeiro está TIRANDO UM RONCO (sem clientes)...");
             barbeiroDormindo = true;
             wait();
         }
